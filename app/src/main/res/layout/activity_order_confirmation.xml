@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Order Confirmation Message -->
+    <TextView
+        android:id="@+id/orderMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Order Confirmed!"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Product Details -->
+    <TextView
+        android:id="@+id/productName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Product Name"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/productPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Product Price"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Payment Methods Section -->
+    <TextView
+        android:text="Choose a Payment Method"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:textStyle="bold" />
+
+    <!-- Payment Option Cards -->
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp">
+
+        <!-- GPay Card -->
+        <Button
+            android:id="@+id/btnGPay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GPay"
+            android:layout_margin="8dp"
+            />
+
+        <!-- PhonePe Card -->
+        <Button
+            android:id="@+id/btnPhonePe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PhonePe"
+            android:layout_margin="8dp"
+            />
+
+        <!-- Cash on Delivery Card -->
+        <Button
+            android:id="@+id/btnCOD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cash on Delivery"
+            android:layout_margin="8dp"
+            />
+
+        <!-- EMI Card -->
+        <Button
+            android:id="@+id/btnEMI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EMI"
+            android:layout_margin="8dp"
+            />
+
+        <!-- Credit Card -->
+        <Button
+            android:id="@+id/btnCreditCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Credit Card"
+            android:layout_margin="8dp"
+            />
+
+        <!-- Debit Card -->
+        <Button
+            android:id="@+id/btnDebitCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Debit Card"
+            android:layout_margin="8dp"
+            />
+
+        <!-- Net Banking -->
+        <Button
+            android:id="@+id/btnNetBanking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Net Banking"
+            android:layout_margin="8dp"
+            />
+
+        <!-- UPI Payment -->
+        <Button
+            android:id="@+id/btnUPI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UPI"
+            android:layout_margin="8dp"
+            />
+    </GridLayout>
+
+    <!-- Confirm Order Button -->
+    <Button
+        android:id="@+id/btnConfirmOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirm Order"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

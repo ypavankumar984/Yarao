@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 public class Product {
+
     private String name;
     private String price;
 

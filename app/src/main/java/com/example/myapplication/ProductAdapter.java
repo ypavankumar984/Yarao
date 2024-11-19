@@ -1,8 +1,10 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
@@ -28,6 +30,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Product product = productList.get(position);
         holder.productName.setText(product.getName());
         holder.productPrice.setText(product.getPrice());
+
+        // Set up the "Buy" button click listener
+        holder.buyButton.setOnClickListener(view -> {
+            // Create an intent to start the OrderConfirmationActivity
+            Intent intent = new Intent(view.getContext(), OrderConfirmationActivity.class);
+            // Pass the product details to the new activity
+            intent.putExtra("productName", product.getName());
+            intent.putExtra("productPrice", product.getPrice());
+            // Start the OrderConfirmationActivity
+            view.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -45,11 +58,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView productName, productPrice;
+        Button buyButton;  // Reference to the Buy button
 
         public ProductViewHolder(View itemView) {
             super(itemView);
             productName = itemView.findViewById(R.id.productName);
             productPrice = itemView.findViewById(R.id.productPrice);
+            buyButton = itemView.findViewById(R.id.buyButton);  // Initialize the Buy button
         }
     }
 }

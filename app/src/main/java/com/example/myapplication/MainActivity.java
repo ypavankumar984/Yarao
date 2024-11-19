@@ -50,12 +50,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Load products into the list
+    // Load products into the list (static data)
     private void loadProducts() {
         productList.add(new Product("Shirt", "$10.99"));
-        productList.add(new Product("Shoes", "$25.99"));
-        productList.add(new Product("Pants", "$30.99"));
+        productList.add(new Product("Shirt", "$12.99"));
+        productList.add(new Product("Shirt", "$15.99"));
+
+        productList.add(new Product("Shoes", "$30.99"));
+        productList.add(new Product("Shoes", "$35.99"));
+        productList.add(new Product("Shoes", "$40.99"));
+
         productList.add(new Product("Watch", "$50.99"));
+        productList.add(new Product("Watch", "$55.99"));
+        productList.add(new Product("Watch", "$60.99"));
+
+        productList.add(new Product("Pants", "$25.99"));
+        productList.add(new Product("Pants", "$27.99"));
+        productList.add(new Product("Pants", "$30.99"));
+
         Log.d("MainActivity", "Static Products: " + productList.size());
     }
 
@@ -63,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private void filterProducts(String query) {
         List<Product> filteredList = new ArrayList<>();
         if (TextUtils.isEmpty(query)) {
-            filteredList = productList;
+            filteredList = productList; // If no search query, show all products
         } else {
             for (Product product : productList) {
                 if (product.getName().toLowerCase().contains(query.toLowerCase())) {
@@ -71,6 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        productAdapter.updateProductList(filteredList);
+        productAdapter.updateProductList(filteredList); // Update the adapter with filtered list
     }
 }
