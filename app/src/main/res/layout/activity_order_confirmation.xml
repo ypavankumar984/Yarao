@@ -44,91 +44,50 @@
 
     <!-- Payment Option Cards -->
     <GridLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:columnCount="2"
-        android:orientation="horizontal"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        android:columnCount="2"
+        android:orientation="horizontal">
 
         <!-- GPay Card -->
         <Button
             android:id="@+id/btnGPay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GPay"
             android:layout_margin="8dp"
-            />
+            android:text="GPay" />
 
         <!-- PhonePe Card -->
-        <Button
-            android:id="@+id/btnPhonePe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PhonePe"
-            android:layout_margin="8dp"
-            />
 
         <!-- Cash on Delivery Card -->
-        <Button
-            android:id="@+id/btnCOD"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cash on Delivery"
-            android:layout_margin="8dp"
-            />
 
         <!-- EMI Card -->
-        <Button
-            android:id="@+id/btnEMI"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="EMI"
-            android:layout_margin="8dp"
-            />
 
         <!-- Credit Card -->
-        <Button
-            android:id="@+id/btnCreditCard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Credit Card"
-            android:layout_margin="8dp"
-            />
 
         <!-- Debit Card -->
-        <Button
-            android:id="@+id/btnDebitCard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Debit Card"
-            android:layout_margin="8dp"
-            />
 
         <!-- Net Banking -->
-        <Button
-            android:id="@+id/btnNetBanking"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Net Banking"
-            android:layout_margin="8dp"
-            />
 
         <!-- UPI Payment -->
-        <Button
-            android:id="@+id/btnUPI"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="UPI"
-            android:layout_margin="8dp"
-            />
     </GridLayout>
 
-    <!-- Confirm Order Button -->
     <Button
-        android:id="@+id/btnConfirmOrder"
-        android:layout_width="match_parent"
+        android:id="@+id/btnPhonePe"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirm Order"
-        android:layout_marginTop="16dp" />
+        android:layout_margin="8dp"
+        android:text="PhonePe" />
+
+    <Button
+        android:id="@+id/btnCOD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="Cash on Delivery" />
+
+    <!-- Confirm Order Button -->
+
 </LinearLayout>

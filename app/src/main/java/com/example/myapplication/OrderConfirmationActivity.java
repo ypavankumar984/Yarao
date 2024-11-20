@@ -1,7 +1,8 @@
 package com.example.myapplication;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,14 +24,13 @@ public class OrderConfirmationActivity extends AppCompatActivity {
         orderMessageTextView = findViewById(R.id.orderMessage);
         productNameTextView = findViewById(R.id.productName);
         productPriceTextView = findViewById(R.id.productPrice);
-        btnConfirmOrder = findViewById(R.id.btnConfirmOrder);
 
         // Get the product details from the Intent
         String productName = getIntent().getStringExtra("productName");
         String productPrice = getIntent().getStringExtra("productPrice");
 
         // Display the order confirmation message and product details
-        orderMessageTextView.setText("Order Confirmed!");
+        orderMessageTextView.setText("Your Order Details!");
         productNameTextView.setText("Product: " + productName);
         productPriceTextView.setText("Price: " + productPrice);
 
@@ -42,33 +42,41 @@ public class OrderConfirmationActivity extends AppCompatActivity {
         Button btnGPay = findViewById(R.id.btnGPay);
         Button btnPhonePe = findViewById(R.id.btnPhonePe);
         Button btnCOD = findViewById(R.id.btnCOD);
-        Button btnEMI = findViewById(R.id.btnEMI);
-        Button btnCreditCard = findViewById(R.id.btnCreditCard);
-        Button btnDebitCard = findViewById(R.id.btnDebitCard);
-        Button btnNetBanking = findViewById(R.id.btnNetBanking);
-        Button btnUPI = findViewById(R.id.btnUPI);
 
         // Set OnClickListener for each payment option
-        btnGPay.setOnClickListener(v -> showPaymentConfirmation("GPay"));
-        btnPhonePe.setOnClickListener(v -> showPaymentConfirmation("PhonePe"));
-        btnCOD.setOnClickListener(v -> showPaymentConfirmation("Cash on Delivery"));
-        btnEMI.setOnClickListener(v -> showPaymentConfirmation("EMI"));
-        btnCreditCard.setOnClickListener(v -> showPaymentConfirmation("Credit Card"));
-        btnDebitCard.setOnClickListener(v -> showPaymentConfirmation("Debit Card"));
-        btnNetBanking.setOnClickListener(v -> showPaymentConfirmation("Net Banking"));
-        btnUPI.setOnClickListener(v -> showPaymentConfirmation("UPI"));
-
-        // Confirm Order button click listener
-        btnConfirmOrder.setOnClickListener(v -> {
-            // Add order confirmation logic here
-            Toast.makeText(this, "Order Confirmed Successfully!", Toast.LENGTH_SHORT).show();
-            // You can perform actions like sending the order details to a server here
-        });
+        btnGPay.setOnClickListener(v -> openGooglePay());
+        btnPhonePe.setOnClickListener(v -> openPhonePe());
+        btnCOD.setOnClickListener(v -> showCODConfirmation());
     }
 
-    // Show payment confirmation
-    private void showPaymentConfirmation(String paymentMethod) {
-        Toast.makeText(this, "Payment through " + paymentMethod + " selected!", Toast.LENGTH_SHORT).show();
-        // You can also implement further logic for processing the payment
+    // Example for Google Pay Intent
+    private void openGooglePay() {
+        try {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("upi://pay?pa=merchantId@bank&pn=MerchantName&mc=1234&tid=12345&tr=orderId123&tn=OrderPayment&am=10&cu=INR"));
+            intent.setPackage("com.google.android.apps.nbu.paisa.user");
+            startActivityForResult(intent, 1);
+        } catch (Exception e) {
+            Toast.makeText(this, "Google Pay is not installed!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Example for PhonePe Intent
+    private void openPhonePe() {
+        try {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("upi://pay?pa=merchantId@bank&pn=MerchantName&mc=1234&tid=12345&tr=orderId123&tn=OrderPayment&am=10&cu=INR"));
+            intent.setPackage("com.phonepe.app");
+            startActivityForResult(intent, 2);
+        } catch (Exception e) {
+            Toast.makeText(this, "PhonePe is not installed!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Example for COD Confirmation
+    private void showCODConfirmation() {
+        Toast.makeText(this, "You chose Cash on Delivery. Pay upon receiving the order.", Toast.LENGTH_SHORT).show();
     }
 }
