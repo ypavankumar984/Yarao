@@ -3,11 +3,8 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,9 +15,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -29,7 +27,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText;
     private Button loginButton;
     private TextView signUpTextView;
-    private Spinner roleSpinner;
     private String selectedRole;
 
     @Override
@@ -46,25 +43,13 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
         signUpTextView = findViewById(R.id.signUpTextView);
-        roleSpinner = findViewById(R.id.spinnerRole);
 
-        // Set up the role selection spinner
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.roles, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        roleSpinner.setAdapter(adapter);
-
-        roleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                selectedRole = parentView.getItemAtPosition(position).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                selectedRole = null;
-            }
-        });
+        // Check if user is already logged in
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null && currentUser.isEmailVerified()) {
+            // User is already logged in, navigate to the appropriate page
+            checkUserRoleAndNavigate(currentUser.getEmail());
+        }
 
         // Login button functionality
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -73,31 +58,11 @@ public class LoginActivity extends AppCompatActivity {
                 String email = emailEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
 
-                if (!email.isEmpty() && !password.isEmpty() && selectedRole != null) {
-                    mAuth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        if (user != null && user.isEmailVerified()) {
-                                            // Save the user role to Firestore
-                                            saveUserRoleToFirestore(user.getEmail(), selectedRole);
-
-                                            // Navigate to MainActivity after successful login
-                                            Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                                            startActivity(mainIntent);
-                                            finish(); // Close the login activity
-                                        } else {
-                                            Toast.makeText(LoginActivity.this, "Account not verified.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    } else {
-                                        Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
+                if (!email.isEmpty() && !password.isEmpty()) {
+                    // Check user in Firestore first
+                    checkUserInFirestore(email, password);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Please enter email, password, and select a role.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Please enter email and password.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -112,23 +77,81 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // Save user role to Firestore
-    private void saveUserRoleToFirestore(String email, String role) {
-        // Create a UserRole object to store in Firestore
-        UserRole userRole = new UserRole(email, role);
+    // Check if the user exists in Firestore and authenticate
+    private void checkUserInFirestore(final String email, final String password) {
+        DocumentReference docRef = db.collection("users").document(email);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Fetch the role of the user from Firestore
+                        selectedRole = document.getString("role");
 
-        db.collection("users")
-                .document(email)  // Use email as the document ID
-                .set(userRole)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "User role saved.", Toast.LENGTH_SHORT).show();
+                        // Proceed with authentication if the role exists
+                        if (selectedRole != null) {
+                            mAuth.signInWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                            if (task.isSuccessful()) {
+                                                FirebaseUser user = mAuth.getCurrentUser();
+                                                if (user != null && user.isEmailVerified()) {
+                                                    // Redirect based on the role
+                                                    checkUserRoleAndNavigate(email);
+                                                } else {
+                                                    Toast.makeText(LoginActivity.this, "Account not verified.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            } else {
+                                                Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                         } else {
-                            Toast.makeText(LoginActivity.this, "Error saving role.", Toast.LENGTH_SHORT).show();
+                            // Role not found in Firestore (Unexpected scenario)
+                            Toast.makeText(LoginActivity.this, "Error fetching role information.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        // User does not exist in Firestore
+                        Toast.makeText(LoginActivity.this, "Account does not exist with this email.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // Error retrieving user data from Firestore
+                    Toast.makeText(LoginActivity.this, "Error checking user in Firestore.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    // Check the user role and navigate accordingly
+    private void checkUserRoleAndNavigate(String email) {
+        DocumentReference docRef = db.collection("users").document(email);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        selectedRole = document.getString("role");
+
+                        if (selectedRole != null) {
+                            // Redirect based on the role
+                            if (selectedRole.equals("Retailer")) {
+                                // Navigate to Retailers Page
+                                Intent retailerIntent = new Intent(LoginActivity.this, RetailersPageActivity.class);
+                                startActivity(retailerIntent);
+                                finish(); // Close the login activity
+                            } else {
+                                // Navigate to MainActivity for other roles (like user)
+                                Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(mainIntent);
+                                finish(); // Close the login activity
+                            }
                         }
                     }
-                });
+                }
+            }
+        });
     }
 }

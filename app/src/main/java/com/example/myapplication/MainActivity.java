@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private ProductAdapter productAdapter;
     private List<Product> productList = new ArrayList<>();
     private EditText searchInput;
-    private String userRole;  // Variable to hold the user role
     private FirebaseAuth mAuth;
 
     @Override
@@ -30,9 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
-
-        // Get the user role passed from the LoginActivity
-        userRole = getIntent().getStringExtra("USER_ROLE");
 
         // Check if the user is authenticated
         FirebaseUser user = mAuth.getCurrentUser();
@@ -48,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         searchInput = findViewById(R.id.searchInput);
 
-        // Load the product list based on the user role
-        loadProductsBasedOnRole(userRole);
+        // Load the product list
+        loadProducts();
 
         // Set the adapter to the RecyclerView
         productAdapter = new ProductAdapter(productList);
@@ -82,58 +78,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Load products into the list based on the user role
-    private void loadProductsBasedOnRole(String role) {
-        // Clear previous list to avoid adding to the same list multiple times
+    // Load products into the list
+    private void loadProducts() {
         productList.clear();
 
-        if (role != null) {
-            switch (role) {
-                case "Explorer": // For Explorer role, show general products
-                    loadGeneralProducts();
-                    break;
-
-                case "Courier": // For Courier role, show delivery-related products
-                    loadCourierProducts();
-                    break;
-
-                case "Merchant": // For Merchant role, show merchant-related products
-                    loadMerchantProducts();
-                    break;
-
-                default:
-                    loadGeneralProducts(); // Default to general products
-                    break;
-            }
-        } else {
-            loadGeneralProducts(); // If no role is passed, default to general products
-        }
-
-        Log.d("MainActivity", "Products loaded for role: " + role);
-    }
-
-    // Static product list for Explorer (general products)
-    private void loadGeneralProducts() {
+        // Static product list for general use
         productList.add(new Product("Shirt", "$10.99"));
         productList.add(new Product("Shoes", "$30.99"));
         productList.add(new Product("Watch", "$50.99"));
         productList.add(new Product("Pants", "$25.99"));
-    }
-
-    // Static product list for Courier (delivery-related products)
-    private void loadCourierProducts() {
         productList.add(new Product("Delivery Bag", "$15.99"));
         productList.add(new Product("Helmet", "$25.99"));
         productList.add(new Product("GPS Device", "$35.99"));
-        productList.add(new Product("Delivery Shoes", "$40.99"));
-    }
-
-    // Static product list for Merchant (merchant-related products)
-    private void loadMerchantProducts() {
         productList.add(new Product("Merchant Shoes", "$20.99"));
         productList.add(new Product("Inventory Organizer", "$55.99"));
         productList.add(new Product("Shop Sign", "$45.99"));
         productList.add(new Product("Packaging Materials", "$10.99"));
+        // Add more products as needed
     }
 
     // Filter products based on the search query

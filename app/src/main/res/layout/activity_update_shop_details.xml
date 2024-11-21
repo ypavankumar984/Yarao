@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <!-- Save button at the top right corner -->
+
+    <!-- Buttons to update geo details and items -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/updateGeoDetailsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Geo Details" />
+
+    <Button
+        android:id="@+id/updateItemsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Items" />
+
+    <!-- Geo details layout (Initially hidden) -->
+    <LinearLayout
+        android:id="@+id/geoDetailsLayout"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/shopNameGeoEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Shop Name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/ownerNameGeoEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Owner Name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/contactNoGeoEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contact No"
+            android:inputType="phone" />
+
+        <EditText
+            android:id="@+id/addressGeoEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address"
+            android:inputType="textPostalAddress" />
+    </LinearLayout>
+
+    <!-- Shop name, owner, contact, address fields (Initially hidden) -->
+    <LinearLayout
+        android:id="@+id/shopDetailsLayout"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/shopNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Shop Name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/ownerNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Owner Name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/contactNoEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contact No"
+            android:inputType="phone" />
+
+        <EditText
+            android:id="@+id/addressEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address"
+            android:inputType="textPostalAddress" />
+    </LinearLayout>
+
+    <!-- Items layout (Initially hidden) -->
+    <LinearLayout
+        android:id="@+id/itemsContainer"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Dynamic item input fields will be added here -->
+        <LinearLayout
+            android:id="@+id/itemLayout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Item Name -->
+            <EditText
+                android:id="@+id/itemNameEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Item Name"
+                android:inputType="text" />
+
+            <!-- Item Cost -->
+            <EditText
+                android:id="@+id/itemCostEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Item Cost"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+
+        <!-- Button to add new items (Initially hidden) -->
+        <Button
+            android:id="@+id/addItemButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add New Item"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>

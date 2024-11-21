@@ -15,6 +15,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+
         <TextView
             android:id="@+id/productName"
             android:layout_width="match_parent"
@@ -32,6 +33,7 @@
             android:textColor="#888888" />
 
         <!-- Buy Button -->
+
         <Button
             android:id="@+id/buyButton"
             android:layout_width="wrap_content"
