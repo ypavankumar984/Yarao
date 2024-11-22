@@ -1,21 +1,144 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/updateShopDetailsButton"
-        android:layout_width="match_parent"
+    <!-- TextViews to display shop details -->
+    <TextView
+        android:id="@+id/shopNameTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Update Shop Details" />
+        android:text="Shop Name: "
+        android:textSize="18sp"
+        android:paddingBottom="8dp" />
 
     <TextView
-        android:id="@+id/shopDetailsTextView"
+        android:id="@+id/ownerNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Owner Name: "
+        android:textSize="18sp"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/contactNoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contact No: "
+        android:textSize="18sp"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/addressTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Address: "
+        android:textSize="18sp"
+        android:paddingBottom="8dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/itemsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:text="Loading shop details..."
-        android:textSize="16sp" />
+        android:layout_marginTop="16dp" />
+
+    <!-- Button to add shop details -->
+    <Button
+        android:id="@+id/addShopButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Shop Details"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Layout to add shop details -->
+    <LinearLayout
+        android:id="@+id/addShopLayout"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/shopNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Shop Name"
+            android:padding="8dp"/>
+
+        <EditText
+            android:id="@+id/ownerNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Owner Name"
+            android:padding="8dp"/>
+
+        <EditText
+            android:id="@+id/contactNoInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Contact No"
+            android:padding="8dp"/>
+
+        <EditText
+            android:id="@+id/addressInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Address"
+            android:padding="8dp"/>
+
+        <Button
+            android:id="@+id/saveShopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Shop Details"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+
+    <!-- Button to add items -->
+    <Button
+        android:id="@+id/addItemButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Items"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Layout to add items -->
+    <LinearLayout
+        android:id="@+id/addItemLayout"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/itemNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Item Name"
+            android:padding="8dp"/>
+
+        <EditText
+            android:id="@+id/itemCostInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Item Cost"
+            android:padding="8dp"/>
+
+        <Button
+            android:id="@+id/saveItemButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Item"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+
+    <!-- Refresh Button -->
+    <Button
+        android:id="@+id/refreshButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Refresh"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>
