@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -22,12 +24,13 @@ import java.util.List;
 public class RetailersPageActivity extends AppCompatActivity {
 
     private TextView shopNameTextView, ownerNameTextView, contactNoTextView, addressTextView;
-    private Button refreshButton, addShopButton, saveShopButton, addItemButton, saveItemButton;
+    private Button refreshButton, addShopButton, saveShopButton, addItemButton, saveItemButton, logoutButton;
     private LinearLayout addShopLayout, addItemLayout;
     private EditText shopNameInput, ownerNameInput, contactNoInput, addressInput, itemNameInput, itemCostInput;
     private RecyclerView itemsRecyclerView;
 
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth; // Firebase Authentication
     private static final String SHOP_COLLECTION = "shops";
     private static final String ITEMS_COLLECTION = "items";
     private static final String SHOP_ID = "shop1"; // Replace with dynamic ID if needed
@@ -50,6 +53,7 @@ public class RetailersPageActivity extends AppCompatActivity {
         saveShopButton = findViewById(R.id.saveShopButton);
         addItemButton = findViewById(R.id.addItemButton);
         saveItemButton = findViewById(R.id.saveItemButton);
+        logoutButton = findViewById(R.id.logoutButton); // Initialize the logout button
         addShopLayout = findViewById(R.id.addShopLayout);
         addItemLayout = findViewById(R.id.addItemLayout);
         shopNameInput = findViewById(R.id.shopNameInput);
@@ -60,8 +64,9 @@ public class RetailersPageActivity extends AppCompatActivity {
         itemCostInput = findViewById(R.id.itemCostInput);
         itemsRecyclerView = findViewById(R.id.itemsRecyclerView);
 
-        // Initialize Firestore
+        // Initialize Firebase instances
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance(); // Firebase Authentication
 
         // Initialize the item list and adapter
         itemList = new ArrayList<>();
@@ -81,6 +86,9 @@ public class RetailersPageActivity extends AppCompatActivity {
 
         // Refresh Button
         refreshButton.setOnClickListener(view -> fetchShopDetails());
+
+        // Logout Button
+        logoutButton.setOnClickListener(view -> logoutUser());
     }
 
     private void fetchShopDetails() {
@@ -169,5 +177,13 @@ public class RetailersPageActivity extends AppCompatActivity {
                     fetchItems(); // Refresh item list
                 })
                 .addOnFailureListener(e -> Toast.makeText(RetailersPageActivity.this, "Error saving item", Toast.LENGTH_SHORT).show());
+    }
+
+    // Logout function
+    private void logoutUser() {
+        mAuth.signOut(); // Sign out from Firebase
+        Intent intent = new Intent(RetailersPageActivity.this, LoginActivity.class); // Redirect to LoginActivity
+        startActivity(intent);
+        finish(); // Close the current activity
     }
 }

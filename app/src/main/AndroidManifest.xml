@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permissions for Internet and location access -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <!-- Application declaration -->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -42,7 +43,11 @@
         <activity android:name=".RetailersPageActivity" android:exported="false" />
 
         <!-- Update Shop Details Activity (Retailer can update shop details) -->
-        <activity android:name=".UpdateShopDetailsActivity" android:exported="false" />
+        <activity android:name=".PaymentOptionsActivity" android:exported="false" />
+
+        <!-- Order Tracking Activity (Map activity) -->
+        <activity android:name=".OrderTrackingActivity" android:exported="false" />
+
 
     </application>
 

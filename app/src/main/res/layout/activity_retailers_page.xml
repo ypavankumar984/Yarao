@@ -5,6 +5,16 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Toolbar (Top bar) -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:title="Retailer Page"
+        android:titleTextColor="@android:color/white"
+        android:elevation="4dp" />
+
     <!-- TextViews to display shop details -->
     <TextView
         android:id="@+id/shopNameTextView"
@@ -141,4 +151,13 @@
         android:layout_height="wrap_content"
         android:text="Refresh"
         android:layout_marginTop="16dp"/>
+
+    <!-- Logout Button -->
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="end" />
 </LinearLayout>
