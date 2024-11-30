@@ -29,7 +29,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         // Bind the product data to the views
         Product product = productList.get(position);
         holder.productName.setText(product.getName());
-        holder.productPrice.setText(product.getPrice());
+        holder.productPrice.setText(product.getCost());
 
         // Set up the "Buy" button click listener
         holder.buyButton.setOnClickListener(view -> {
@@ -37,7 +37,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             Intent intent = new Intent(view.getContext(), OrderConfirmationActivity.class);
             // Pass the product details to the new activity
             intent.putExtra("productName", product.getName());
-            intent.putExtra("productPrice", product.getPrice());
+            intent.putExtra("productPrice", product.getCost());
             // Start the OrderConfirmationActivity
             view.getContext().startActivity(intent);
         });

@@ -11,6 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +27,16 @@ public class MainActivity extends AppCompatActivity {
     private List<Product> productList = new ArrayList<>();
     private EditText searchInput;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize FirebaseAuth
+        // Initialize FirebaseAuth and Firestore
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         // Check if the user is authenticated
         FirebaseUser user = mAuth.getCurrentUser();
@@ -44,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         searchInput = findViewById(R.id.searchInput);
 
-        // Load the product list
+        // Load products from Firestore
         loadProducts();
 
         // Set the adapter to the RecyclerView
@@ -78,23 +86,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Load products into the list
+    // Load products into the list from Firestore
     private void loadProducts() {
         productList.clear();
 
-        // Static product list for general use
-        productList.add(new Product("Shirt", "$10.99"));
-        productList.add(new Product("Shoes", "$30.99"));
-        productList.add(new Product("Watch", "$50.99"));
-        productList.add(new Product("Pants", "$25.99"));
-        productList.add(new Product("Delivery Bag", "$15.99"));
-        productList.add(new Product("Helmet", "$25.99"));
-        productList.add(new Product("GPS Device", "$35.99"));
-        productList.add(new Product("Merchant Shoes", "$20.99"));
-        productList.add(new Product("Inventory Organizer", "$55.99"));
-        productList.add(new Product("Shop Sign", "$45.99"));
-        productList.add(new Product("Packaging Materials", "$10.99"));
-        // Add more products as needed
+        // Reference to your Firestore collection for products
+        CollectionReference productsRef = db.collection("shops")
+                .document("shop1") // Specify the shop ID here
+                .collection("items");
+
+        productsRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                if (querySnapshot != null) {
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        // Assuming your document has fields "itemName" and "itemCost"
+                        String itemName = document.getString("itemName");
+                        String itemCost = document.getString("itemCost");
+
+                        // Add the product to the list
+                        productList.add(new Product(itemName, itemCost));
+                    }
+                    productAdapter.notifyDataSetChanged(); // Update the adapter with the fetched products
+                }
+            } else {
+                Log.w("MainActivity", "Error getting documents.", task.getException());
+            }
+        });
     }
 
     // Filter products based on the search query

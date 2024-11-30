@@ -1,20 +1,18 @@
 package com.example.myapplication;
-
 public class Product {
-
     private String name;
-    private String price;
+    private String cost;
 
-    public Product(String name, String price) {
+    public Product(String name, String cost) {
         this.name = name;
-        this.price = price;
+        this.cost = cost;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getPrice() {
-        return price;
+    public String getCost() {
+        return cost;
     }
 }
