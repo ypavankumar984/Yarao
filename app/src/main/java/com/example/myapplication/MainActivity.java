@@ -95,25 +95,56 @@ public class MainActivity extends AppCompatActivity {
                 .document("shop1") // Specify the shop ID here
                 .collection("items");
 
-        productsRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                QuerySnapshot querySnapshot = task.getResult();
-                if (querySnapshot != null) {
-                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                        // Assuming your document has fields "itemName" and "itemCost"
-                        String itemName = document.getString("itemName");
-                        String itemCost = document.getString("itemCost");
+        // Reference to the shop document to get the shop name
+        DocumentReference shopRef = db.collection("shops").document("shop1");
 
-                        // Add the product to the list
-                        productList.add(new Product(itemName, itemCost));
-                    }
-                    productAdapter.notifyDataSetChanged(); // Update the adapter with the fetched products
+        // Fetch the shopName from the shop document
+        shopRef.get().addOnCompleteListener(shopTask -> {
+            if (shopTask.isSuccessful()) {
+                DocumentSnapshot shopDocument = shopTask.getResult();
+                if (shopDocument != null && shopDocument.exists()) {
+                    // Retrieve the shop name from the shop document
+                    String shopName = shopDocument.getString("shopName");
+
+                    // Now fetch the products and add them to the list
+                    productsRef.get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (querySnapshot != null) {
+                                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                    // Assuming your product document has fields "itemName" and "itemCost"
+                                    // Assuming itemCost is a String, you need to convert it to double
+                                    String itemName = document.getString("itemName");
+                                    String itemCost = document.getString("itemCost");
+
+// Convert itemCost from String to double
+                                    double cost = 0.0;
+                                    try {
+                                        cost = Double.parseDouble(itemCost); // Convert to double
+                                    } catch (NumberFormatException e) {
+                                        // Handle the case when itemCost is not a valid double
+                                        e.printStackTrace();
+                                        // You can also set a default value or show an error message
+                                        cost = 0.0; // Example: default to 0 if parsing fails
+                                    }
+
+// Add the product to the list with the shop name
+                                    productList.add(new Product(itemName, cost, shopName));
+
+                                }
+                                productAdapter.notifyDataSetChanged(); // Update the adapter with the fetched products
+                            }
+                        } else {
+                            Log.w("MainActivity", "Error getting products.", task.getException());
+                        }
+                    });
                 }
             } else {
-                Log.w("MainActivity", "Error getting documents.", task.getException());
+                Log.w("MainActivity", "Error getting shop info.", shopTask.getException());
             }
         });
     }
+
 
     // Filter products based on the search query
     private void filterProducts(String query) {

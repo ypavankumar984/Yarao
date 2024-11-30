@@ -29,7 +29,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         // Bind the product data to the views
         Product product = productList.get(position);
         holder.productName.setText(product.getName());
-        holder.productPrice.setText(product.getCost());
+        holder.productPrice.setText(product.getFormattedCost());  // Format the price with Rs.
 
         // Set up the "Buy" button click listener
         holder.buyButton.setOnClickListener(view -> {
@@ -37,11 +37,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             Intent intent = new Intent(view.getContext(), OrderConfirmationActivity.class);
             // Pass the product details to the new activity
             intent.putExtra("productName", product.getName());
-            intent.putExtra("productPrice", product.getCost());
+            intent.putExtra("productPrice", product.getFormattedCost());  // Pass formatted cost
             // Start the OrderConfirmationActivity
             view.getContext().startActivity(intent);
         });
     }
+
 
     @Override
     public int getItemCount() {
@@ -57,13 +58,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     // ViewHolder class for each product item
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView productName, productPrice;
+        TextView productName, productPrice, shopName;  // Reference to the shopName TextView
         Button buyButton;  // Reference to the Buy button
 
         public ProductViewHolder(View itemView) {
             super(itemView);
             productName = itemView.findViewById(R.id.productName);
             productPrice = itemView.findViewById(R.id.productPrice);
+            shopName = itemView.findViewById(R.id.shopName);  // Initialize shopName TextView
             buyButton = itemView.findViewById(R.id.buyButton);  // Initialize the Buy button
         }
     }

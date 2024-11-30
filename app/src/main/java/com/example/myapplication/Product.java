@@ -1,18 +1,31 @@
 package com.example.myapplication;
+
 public class Product {
     private String name;
-    private String cost;
+    private double cost;
+    private String shopName; // Add a shopName field
 
-    public Product(String name, String cost) {
+    // Constructor to initialize all fields
+    public Product(String name, double cost, String shopName) {
         this.name = name;
         this.cost = cost;
+        this.shopName = shopName;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getCost() {
+    public double getCost() {
         return cost;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    // Method to format the cost with Rs.
+    public String getFormattedCost() {
+        return "Rs." + cost;
     }
 }
