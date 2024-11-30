@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -136,11 +137,15 @@ public class LoginActivity extends AppCompatActivity {
                         selectedRole = document.getString("role");
 
                         if (selectedRole != null) {
-                            // Redirect based on the role
                             if (selectedRole.equals("Retailer")) {
                                 // Navigate to Retailers Page
                                 Intent retailerIntent = new Intent(LoginActivity.this, RetailersPageActivity.class);
                                 startActivity(retailerIntent);
+                                finish(); // Close the login activity
+                            } else if (selectedRole.equals("Courier")) {
+                                // Navigate to Courier Page
+                                Intent courierIntent = new Intent(LoginActivity.this, CourierPageActivity.class);
+                                startActivity(courierIntent);
                                 finish(); // Close the login activity
                             } else {
                                 // Navigate to MainActivity for other roles (like user)
@@ -150,8 +155,13 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     }
+                } else {
+                    // Handle task failure
+                    Log.e("FirestoreError", "Error fetching document: ", task.getException());
+                    Toast.makeText(LoginActivity.this, "Failed to fetch user data. Please try again.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
 }

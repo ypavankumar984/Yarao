@@ -48,6 +48,8 @@
         <!-- Order Tracking Activity (Map activity) -->
         <activity android:name=".OrderTrackingActivity" android:exported="false" />
 
+        <activity android:name=".CourierPageActivity" android:exported="false" />
+
 
     </application>
 
