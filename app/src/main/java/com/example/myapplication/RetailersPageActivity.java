@@ -33,7 +33,6 @@ public class RetailersPageActivity extends AppCompatActivity {
     private FirebaseAuth mAuth; // Firebase Authentication
     private static final String SHOP_COLLECTION = "shops";
     private static final String ITEMS_COLLECTION = "items";
-    private static final String SHOP_ID = "shop1"; // Replace with dynamic ID if needed
 
     private List<Item> itemList;
     private ItemAdapter itemAdapter;
@@ -74,7 +73,7 @@ public class RetailersPageActivity extends AppCompatActivity {
         itemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         itemsRecyclerView.setAdapter(itemAdapter);
 
-        // Fetch the shop details and items from Firestore
+        // Fetch the shop details and items from Firestore using the logged-in user's email
         fetchShopDetails();
 
         // Set onClick listeners
@@ -92,7 +91,15 @@ public class RetailersPageActivity extends AppCompatActivity {
     }
 
     private void fetchShopDetails() {
-        db.collection(SHOP_COLLECTION).document(SHOP_ID)
+        String userEmail = mAuth.getCurrentUser().getEmail(); // Get the logged-in user's email
+
+        if (userEmail == null) {
+            Toast.makeText(RetailersPageActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Use the user's email as the shop ID to fetch details
+        db.collection(SHOP_COLLECTION).document(userEmail)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -107,8 +114,8 @@ public class RetailersPageActivity extends AppCompatActivity {
                         contactNoTextView.setText("Contact No: " + contactNo);
                         addressTextView.setText("Address: " + address);
 
-                        // Fetch items from Firestore
-                        fetchItems();
+                        // Fetch items for this shop using the email as the shop ID
+                        fetchItems(userEmail);
                     } else {
                         Toast.makeText(RetailersPageActivity.this, "No shop details found", Toast.LENGTH_SHORT).show();
                     }
@@ -118,8 +125,8 @@ public class RetailersPageActivity extends AppCompatActivity {
                 });
     }
 
-    private void fetchItems() {
-        db.collection(SHOP_COLLECTION).document(SHOP_ID)
+    private void fetchItems(String userEmail) {
+        db.collection(SHOP_COLLECTION).document(userEmail)
                 .collection(ITEMS_COLLECTION)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
@@ -147,15 +154,19 @@ public class RetailersPageActivity extends AppCompatActivity {
             return;
         }
 
-        // Create a shop document
-        db.collection(SHOP_COLLECTION).document(SHOP_ID)
-                .set(new Shop(shopName, ownerName, contactNo, address))
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(RetailersPageActivity.this, "Shop details saved", Toast.LENGTH_SHORT).show();
-                    addShopLayout.setVisibility(View.GONE); // Hide the input fields
-                    fetchShopDetails(); // Refresh shop and item data
-                })
-                .addOnFailureListener(e -> Toast.makeText(RetailersPageActivity.this, "Error saving shop details", Toast.LENGTH_SHORT).show());
+        // Get the logged-in user's email as the shop ID
+        String userEmail = mAuth.getCurrentUser().getEmail();
+        if (userEmail != null) {
+            // Create a shop document using the user's email as the document ID
+            db.collection(SHOP_COLLECTION).document(userEmail)
+                    .set(new Shop(shopName, ownerName, contactNo, address))
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(RetailersPageActivity.this, "Shop details saved", Toast.LENGTH_SHORT).show();
+                        addShopLayout.setVisibility(View.GONE); // Hide the input fields
+                        fetchShopDetails(); // Refresh shop and item data
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(RetailersPageActivity.this, "Error saving shop details", Toast.LENGTH_SHORT).show());
+        }
     }
 
     private void saveItemDetails() {
@@ -167,16 +178,20 @@ public class RetailersPageActivity extends AppCompatActivity {
             return;
         }
 
-        // Create an item document
-        db.collection(SHOP_COLLECTION).document(SHOP_ID)
-                .collection(ITEMS_COLLECTION)
-                .add(new Item(itemName, itemCost))
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(RetailersPageActivity.this, "Item saved", Toast.LENGTH_SHORT).show();
-                    addItemLayout.setVisibility(View.GONE); // Hide the input fields
-                    fetchItems(); // Refresh item list
-                })
-                .addOnFailureListener(e -> Toast.makeText(RetailersPageActivity.this, "Error saving item", Toast.LENGTH_SHORT).show());
+        // Get the logged-in user's email as the shop ID
+        String userEmail = mAuth.getCurrentUser().getEmail();
+        if (userEmail != null) {
+            // Create an item document
+            db.collection(SHOP_COLLECTION).document(userEmail)
+                    .collection(ITEMS_COLLECTION)
+                    .add(new Item(itemName, itemCost))
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(RetailersPageActivity.this, "Item saved", Toast.LENGTH_SHORT).show();
+                        addItemLayout.setVisibility(View.GONE); // Hide the input fields
+                        fetchItems(userEmail); // Refresh item list
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(RetailersPageActivity.this, "Error saving item", Toast.LENGTH_SHORT).show());
+        }
     }
 
     // Logout function
