@@ -30,6 +30,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Product product = productList.get(position);
         holder.productName.setText(product.getName());
         holder.productPrice.setText(product.getFormattedCost());  // Format the price with Rs.
+        holder.shopName.setText(product.getShopName());  // Set shop name
 
         // Set up the "Buy" button click listener
         holder.buyButton.setOnClickListener(view -> {
@@ -42,7 +43,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             view.getContext().startActivity(intent);
         });
     }
-
 
     @Override
     public int getItemCount() {

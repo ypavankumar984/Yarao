@@ -36,7 +36,6 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="8dp"/>
 
-
         <!-- Shop Name TextView aligned to the top right, with bold text -->
         <TextView
             android:id="@+id/shopName"
@@ -48,7 +47,7 @@
             android:textStyle="bold"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-        android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp"/>
 
         <!-- Buy Button -->
         <Button

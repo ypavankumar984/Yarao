@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Load products into the list from Firestore
+    // Load products into the list from Firestore
     private void loadProducts() {
         productList.clear();
 
@@ -112,25 +113,19 @@ public class MainActivity extends AppCompatActivity {
                             QuerySnapshot querySnapshot = task.getResult();
                             if (querySnapshot != null) {
                                 for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                                    // Assuming your product document has fields "itemName" and "itemCost"
-                                    // Assuming itemCost is a String, you need to convert it to double
                                     String itemName = document.getString("itemName");
                                     String itemCost = document.getString("itemCost");
 
-// Convert itemCost from String to double
                                     double cost = 0.0;
                                     try {
                                         cost = Double.parseDouble(itemCost); // Convert to double
                                     } catch (NumberFormatException e) {
-                                        // Handle the case when itemCost is not a valid double
                                         e.printStackTrace();
-                                        // You can also set a default value or show an error message
-                                        cost = 0.0; // Example: default to 0 if parsing fails
+                                        cost = 0.0; // Default to 0 if parsing fails
                                     }
 
-// Add the product to the list with the shop name
+                                    // Add the product to the list with the shop name
                                     productList.add(new Product(itemName, cost, shopName));
-
                                 }
                                 productAdapter.notifyDataSetChanged(); // Update the adapter with the fetched products
                             }
@@ -138,12 +133,15 @@ public class MainActivity extends AppCompatActivity {
                             Log.w("MainActivity", "Error getting products.", task.getException());
                         }
                     });
+                } else {
+                    Log.w("MainActivity", "Shop document does not exist.");
                 }
             } else {
                 Log.w("MainActivity", "Error getting shop info.", shopTask.getException());
             }
         });
     }
+
 
 
     // Filter products based on the search query
