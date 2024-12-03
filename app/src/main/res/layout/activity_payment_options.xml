@@ -1,57 +1,126 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name: "
-        android:textSize="16sp"
-        android:layout_marginBottom="8dp"/>
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btnNext"
+        android:layout_marginBottom="16dp">
 
-    <TextView
-        android:id="@+id/addressTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Address: "
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select Payment Method"
-        android:textSize="18sp"
-        android:layout_marginBottom="16dp"/>
+            <!-- Name TextView -->
+            <TextView
+                android:id="@+id/nameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name: "
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
 
-    <Button
-        android:id="@+id/btnGPay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Google Pay"/>
+            <!-- Address TextView -->
+            <TextView
+                android:id="@+id/addressTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address: "
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
 
-    <Button
-        android:id="@+id/btnPhonePe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PhonePe"/>
+            <!-- Delivery Status TextView -->
+            <TextView
+                android:id="@+id/statusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: Waiting for delivery..."
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone" />
 
-    <Button
-        android:id="@+id/btnCOD"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cash on Delivery"
-        android:layout_marginTop="16dp"/>
+            <!-- Input field for Delivery Status -->
+            <EditText
+                android:id="@+id/deliveryStatusEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter delivery status"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                android:padding="10dp"
+                android:visibility="gone" />
 
+            <!-- Payment method selection header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Payment Method"
+                android:textSize="20sp"
+                android:layout_marginBottom="16dp"
+                android:textStyle="bold" />
+
+            <!-- Payment method buttons -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <!-- Google Pay Button -->
+                <Button
+                    android:id="@+id/btnGPay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Google Pay"
+                    android:textSize="18sp"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:textColor="@android:color/white" />
+
+                <!-- PhonePe Button -->
+                <Button
+                    android:id="@+id/btnPhonePe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PhonePe"
+                    android:textSize="18sp"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:textColor="@android:color/white" />
+
+                <!-- Cash on Delivery Button -->
+                <Button
+                    android:id="@+id/btnCOD"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cash on Delivery"
+                    android:textSize="18sp"
+                    android:padding="12dp"
+                    android:layout_marginBottom="16dp"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Next Button -->
     <Button
         android:id="@+id/btnNext"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Next"
+        android:textSize="18sp"
+        android:padding="12dp"
         android:visibility="gone"
-        android:layout_marginTop="16dp"/>
-</LinearLayout>
+        android:layout_alignParentBottom="true"
+        android:textColor="@android:color/white"
+    />
+</RelativeLayout>
