@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         shopsRef.get().addOnCompleteListener(shopsTask -> {
             if (shopsTask.isSuccessful()) {
                 QuerySnapshot shopsSnapshot = shopsTask.getResult();
-                if (shopsSnapshot != null) {
+                if (shopsSnapshot != null && !shopsSnapshot.isEmpty()) {
                     for (DocumentSnapshot shopDocument : shopsSnapshot.getDocuments()) {
                         String shopName = shopDocument.getString("shopName"); // Shop name
                         String shopId = shopDocument.getId(); // Shop ID
@@ -105,15 +105,22 @@ public class MainActivity extends AppCompatActivity {
                         itemsRef.get().addOnCompleteListener(itemsTask -> {
                             if (itemsTask.isSuccessful()) {
                                 QuerySnapshot itemsSnapshot = itemsTask.getResult();
-                                if (itemsSnapshot != null) {
+                                if (itemsSnapshot != null && !itemsSnapshot.isEmpty()) {
                                     for (DocumentSnapshot itemDocument : itemsSnapshot.getDocuments()) {
                                         String itemName = itemDocument.getString("itemName");
-                                        double itemCost = itemDocument.getDouble("itemCost"); // Get itemCost as double
 
-                                        // Add product to the list
-                                        productList.add(new Product(itemName, itemCost, shopName));
+                                        // Safely get itemCost and handle null or invalid values
+                                        Double itemCost = itemDocument.getDouble("itemCost");
+                                        if (itemName != null && itemCost != null) {
+                                            // Add product to the list
+                                            productList.add(new Product(itemName, itemCost, shopName));
+                                        } else {
+                                            Log.w("MainActivity", "Invalid item data in shop: " + shopId);
+                                        }
                                     }
                                     productAdapter.notifyDataSetChanged(); // Notify adapter
+                                } else {
+                                    Log.w("MainActivity", "No items found for shop: " + shopId);
                                 }
                             } else {
                                 Log.w("MainActivity", "Error fetching items for shop: " + shopId, itemsTask.getException());
@@ -129,18 +136,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     // Filter products based on search query
     private void filterProducts(String query) {
         List<Product> filteredList = new ArrayList<>();
+
         if (TextUtils.isEmpty(query)) {
             filteredList = productList; // If no search query, show all products
         } else {
+            String queryLowerCase = query.toLowerCase(); // Convert the query to lower case once for comparison
             for (Product product : productList) {
-                if (product.getName().toLowerCase().contains(query.toLowerCase())) {
+                // Check if the itemName contains the query or shopName contains the query (case insensitive)
+                if (product.getName().toLowerCase().contains(queryLowerCase) ||
+                        product.getShopName().toLowerCase().contains(queryLowerCase)) {
                     filteredList.add(product);
                 }
             }
         }
-        productAdapter.updateProductList(filteredList); // Update adapter with filtered list
+        productAdapter.updateProductList(filteredList); // Update the adapter with the filtered list
     }
+
 }

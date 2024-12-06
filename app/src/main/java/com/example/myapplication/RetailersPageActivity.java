@@ -133,7 +133,7 @@ public class RetailersPageActivity extends AppCompatActivity {
                     itemList.clear(); // Clear the list before adding new data
                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                         String itemName = document.getString("itemName");
-                        String itemCost = document.getString("itemCost");
+                        double itemCost = document.getDouble("itemCost"); // Fetch as double
                         itemList.add(new Item(itemName, itemCost)); // Add item to list
                     }
                     itemAdapter.notifyDataSetChanged(); // Notify adapter to update RecyclerView
@@ -171,28 +171,35 @@ public class RetailersPageActivity extends AppCompatActivity {
 
     private void saveItemDetails() {
         String itemName = itemNameInput.getText().toString();
-        String itemCost = itemCostInput.getText().toString();
+        String itemCostString = itemCostInput.getText().toString();
 
-        if (itemName.isEmpty() || itemCost.isEmpty()) {
+        if (itemName.isEmpty() || itemCostString.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Get the logged-in user's email as the shop ID
-        String userEmail = mAuth.getCurrentUser().getEmail();
-        if (userEmail != null) {
-            // Create an item document
-            db.collection(SHOP_COLLECTION).document(userEmail)
-                    .collection(ITEMS_COLLECTION)
-                    .add(new Item(itemName, itemCost))
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(RetailersPageActivity.this, "Item saved", Toast.LENGTH_SHORT).show();
-                        addItemLayout.setVisibility(View.GONE); // Hide the input fields
-                        fetchItems(userEmail); // Refresh item list
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(RetailersPageActivity.this, "Error saving item", Toast.LENGTH_SHORT).show());
+        try {
+            double itemCost = Double.parseDouble(itemCostString); // Parse item cost to double
+
+            // Get the logged-in user's email as the shop ID
+            String userEmail = mAuth.getCurrentUser().getEmail();
+            if (userEmail != null) {
+                // Create an item document
+                db.collection(SHOP_COLLECTION).document(userEmail)
+                        .collection(ITEMS_COLLECTION)
+                        .add(new Item(itemName, itemCost)) // Pass the double value
+                        .addOnSuccessListener(documentReference -> {
+                            Toast.makeText(RetailersPageActivity.this, "Item saved", Toast.LENGTH_SHORT).show();
+                            addItemLayout.setVisibility(View.GONE); // Hide the input fields
+                            fetchItems(userEmail); // Refresh item list
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(RetailersPageActivity.this, "Error saving item", Toast.LENGTH_SHORT).show());
+            }
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Invalid cost format. Please enter a valid number.", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     // Logout function
     private void logoutUser() {
